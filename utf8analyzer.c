@@ -85,7 +85,7 @@ int getCodepoints(char str[])
           }
           return len;
       }
-    void utf_8analyzer(char str[])
+  /* void utf_8analyzer(char str[])
     {
         int isAscii = isAllAscii(str);
         if(isAscii)
@@ -97,9 +97,9 @@ int getCodepoints(char str[])
             printf("Valid ASCII: false");
         }
         int length = getByteLen(str);
-        printf("Length in Bytes
+        printf("Length in Bytes");
     }
-    
+    */
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Usage: utf8analyzer \"<UTF-8 encoded string>\"\n");
@@ -107,7 +107,11 @@ int main(int argc, char *argv[]) {
     }
     else
     {
-        utf_8analyzer(argv[1]);
+       // utf_8analyzer(argv[1]);
+	int isAscii = isAllAscii(argv[1]);
+	printf("Valid ASCII: %s\n", isAscii ? "true":"false");
+	printf("Length in bytes: %d\n",getByteLen(argv[1]));
+	printf("Number of code points: %d\n",getCodepoints(argv[1])); 
     }
 }
  
