@@ -10,12 +10,12 @@
 {
         for(int i = 0; str[i] != 0; i ++)
         {
-            if(str[i] > 127)
+            if(str[i] > 0x7F)
             {
-                return 0;
+                return 1;
             }
         }
-        return 1;
+        return 0;
     }
    int getByteLen(char str[])
     {
@@ -32,26 +32,29 @@
             if((str[i] & 0xE0) == 0xC0)
             {
                 len +=2;
-                i++;
                 continue;
             }
             //check if three bytes
             if((str[i] & 0xF0) == 0xE0)
             {
                 len+=3;
-                i+=2;
+                i = i + 1;
                 continue;
             }
-            if((str[i] & 0xF1) == 0xF0)
+            if((str[i] & 0xF8) == 0xF0)
             {
                 len+=4;
-                i+=3;
+                i = i + 2;
                 continue;
+            }
+            else
+            {
+                len += 0;
             }
         }
         return len;
     }
-int getCodepoints(char str[])
+int countCodepoints(char str[])
      {
           int len = 0;
           for(int i = 0; str[i] != 0; i++)
@@ -65,39 +68,68 @@ int getCodepoints(char str[])
               //check if two bytes
               if((str[i] & 0xE0) == 0xC0)
               {
-                  len +=2;
+                  len +=1;
                   i++;
                   continue;
               }
               //check if three bytes
               if((str[i] & 0xF0) == 0xE0)
               {
-                  len+=3;
+                  len+=1;
                   i+=2;
                   continue;
               }
               if((str[i] & 0xF1) == 0xF0)
               {
-                  len+=4;
+                  len+=1;
                   i+=3;
                   continue;
               }
           }
           return len;
       }
+void codetodec(char str[])
+{
+    int result = 0;
+    for(int i = 0; str[i] != 0; i++)
+    {   
+        char word[4]; 
+        //single byte
+        if(str[i] >= 0 && str[i] <= 127)
+        {
+            word[0] = str[i];
+            printf("%d ", word[0]);
+            continue;
+        }
+        if((str[i] & 0xD0) == 0xC0)
+        {
+            word[0] = (str[i] & 0x1F);
+            word[1] = (str[i] & 0x3F);
+            result = ((word[0] << 6) | word[2]);
+            printf("%d ", result);
+        }
+        if((str[i] & 0xF0) == 0xE0)
+        {
+            ;
+        }
+    }
+}
     void utf_8analyzer(char str[])
     {
         int isAscii = isAllAscii(str);
         if(isAscii)
         {
-            printf("Valid ASCII: true");
+            printf("Valid ASCII: true\n");
         }
         else
         {
-            printf("Valid ASCII: false");
+            printf("Valid ASCII: false\n");
         }
         int length = getByteLen(str);
-        printf("Length in Bytes
+        printf("Length in Bytes: %d\n", length);
+        int amount = countCodepoints(str);
+        printf("Number of Code Points: %d\n", amount);
+
     }
     
 int main(int argc, char *argv[]) {
